@@ -1,0 +1,167 @@
+# Code Book - Getting and Cleaning Data Course Project
+
+This code book describes the data, the variables, and any transformations or work performed to clean up the data for the Human Activity Recognition Using Smartphones Dataset.
+
+---
+
+## 1. Data Source
+* **Source Dataset:** Human Activity Recognition Using Smartphones Dataset
+* **Original Description & Download:** [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones)
+* **Dataset Link Used:** [UCI HAR Dataset.zip](https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip)
+
+---
+
+## 2. Study Design and Data Processing
+The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, we captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz.
+
+The raw data was processed through the `run_analysis.R` script by executing the following steps:
+
+1. **Merging Datasets:** The training and test datasets (`subject_*`, `y_*`, and `X_*`) were combined to create single data tables for subjects, activities, and features.
+2. **Extracting Mean and Standard Deviation:** Only the measurements containing mean (`mean()`) and standard deviation (`std()`) values were selected from the feature set.
+3. **Descriptive Activity Names:** Numeric activity codes (1–6) were replaced with descriptive text labels derived from `activity_labels.txt`.
+4. **Variable Labeling:** Column names were cleaned by expanding time/frequency prefixes (`t` to `Time`, `f` to `Frequency`) and removing messy characters like parentheses and hyphens.
+5. **Creating the Final Tidy Dataset:** An independent tidy dataset (`FinalData.txt`) was generated containing the average of each variable for each activity and each subject using the `dplyr` package.
+
+---
+
+## 3. Variables in the Tidy Data Set (`FinalData.txt`)
+
+The final dataset contains **180 rows** (30 subjects $\times$ 6 activities) and **88 columns**. 
+
+### Identifiers
+* **`subject`**: Identifies the subject who performed the activity. 
+  * *Class:* Integer 
+  * *Range:* `1` to `30`
+* **`activity`**: The label of the activity performed.
+  * *Class:* Character / Factor
+  * *Values:* 
+    * `WALKING`
+    * `WALKING_UPSTAIRS`
+    * `WALKING_DOWNSTAIRS`
+    * `SITTING`
+    * `STANDING`
+    * `LAYING`
+
+### Measurements (Averaged Features)
+All feature measurements shown below are averages grouped by `subject` and `activity`. 
+* *Units:* Features are normalized and bounded within the range of `[-1, 1]`, so they are dimensionless.
+* *Naming convention:* 
+  * Prefix **`Time`** denotes time domain signals.
+  * Prefix **`Frequency`** denotes frequency domain signals (derived via Fast Fourier Transform - FFT).
+  * **`Accelerometer`** / **`Gyroscope`** represent the sensor source.
+  * **`Mean`** / **`STD`** represent the calculated mean or standard deviation.
+  * **`-X`**, **`-Y`**, **`-Z`** denote the 3-axial directions in space.
+
+#### List of Feature Variables:
+1. `TimeBodyAccelerometer-mean-X`
+2. `TimeBodyAccelerometer-mean-Y`
+3. `TimeBodyAccelerometer-mean-Z`
+4. `TimeBodyAccelerometer-std-X`
+5. `TimeBodyAccelerometer-std-Y`
+6. `TimeBodyAccelerometer-std-Z`
+7. `TimeGravityAccelerometer-mean-X`
+8. `TimeGravityAccelerometer-mean-Y`
+9. `TimeGravityAccelerometer-mean-Z`
+10. `TimeGravityAccelerometer-std-X`
+11. `TimeGravityAccelerometer-std-Y`
+12. `TimeGravityAccelerometer-std-Z`
+13. `TimeBodyAccelerometerJerk-mean-X`
+14. `TimeBodyAccelerometerJerk-mean-Y`
+15. `TimeBodyAccelerometerJerk-mean-Z`
+16. `TimeBodyAccelerometerJerk-std-X`
+17. `TimeBodyAccelerometerJerk-std-Y`
+18. `TimeBodyAccelerometerJerk-std-Z`
+19. `TimeBodyGyroscope-mean-X`
+20. `TimeBodyGyroscope-mean-Y`
+21. `TimeBodyGyroscope-mean-Z`
+22. `TimeBodyGyroscope-std-X`
+23. `TimeBodyGyroscope-std-Y`
+24. `TimeBodyGyroscope-std-Z`
+25. `TimeBodyGyroscopeJerk-mean-X`
+26. `TimeBodyGyroscopeJerk-mean-Y`
+27. `TimeBodyGyroscopeJerk-mean-Z`
+28. `TimeBodyGyroscopeJerk-std-X`
+29. `TimeBodyGyroscopeJerk-std-Y`
+30. `TimeBodyGyroscopeJerk-std-Z`
+31. `TimeBodyAccelerometerMagnitude-mean`
+32. `TimeBodyAccelerometerMagnitude-std`
+33. `TimeGravityAccelerometerMagnitude-mean`
+34. `TimeGravityAccelerometerMagnitude-std`
+3Here is a clean, comprehensive template for your **`CodeBook.md`** file that matches the streamlined script and meets all peer-review expectations. You can save this directly as `CodeBook.md` in your GitHub repository.
+
+---
+
+```markdown
+# Code Book - Getting and Cleaning Data Course Project
+
+This code book describes the data, variables, and any transformations or work performed to clean up the data for the Human Activity Recognition Using Smartphones Dataset.
+
+## Data Source
+* **Source Dataset:** [UCI Machine Learning Repository - Human Activity Recognition Using Smartphones](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones)
+* **Download Link:** [UCI HAR Dataset.zip](https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip)
+
+---
+
+## Study Design & Transformations (`run_analysis.R`)
+
+The `run_analysis.R` script performs the following 5 steps to clean and tidy the data:
+
+1. **Merge Training and Test Sets:** 
+   - Loaded the training and testing sets (`X_train.txt`, `y_train.txt`, `subject_train.txt`, `X_test.txt`, `y_test.txt`, `subject_test.txt`).
+   - Combined the respective training and test tables using `rbind()`.
+   - Combined subject, activity labels, and feature measurements into a single master data frame using `cbind()`.
+
+2. **Extract Mean and Standard Deviation:** 
+   - Filtered the dataset to keep only columns corresponding to measurements on the mean (`mean`) and standard deviation (`std`) for each measurement, alongside `subject` and activity codes.
+
+3. **Use Descriptive Activity Names:** 
+   - Replaced numeric activity codes (1–6) with descriptive text labels loaded from `activity_labels.txt` (`WALKING`, `WALKING_UPSTAIRS`, `WALKING_DOWNSTAIRS`, `SITTING`, `STANDING`, `LAYING`).
+
+4. **Appropriately Label Variable Names:** 
+   - Cleaned up variable names by expanding abbreviations (`t` to `Time`, `f` to `Frequency`) and removing messy special characters like parentheses and trailing dashes.
+
+5. **Create a Second Independent Tidy Data Set:** 
+   - Grouped the cleaned dataset by `subject` and `activity`.
+   - Calculated the average (mean) of every feature variable for each combination of subject and activity.
+   - Exported the final result to `FinalData.txt`.
+
+---
+
+## Variables in `FinalData.txt`
+
+### Identifiers
+* **`subject`** 
+  * Identifies the human subject who performed the activity.
+  * **Class:** Integer (`1` to `30`).
+
+* **`activity`** 
+  * The type of activity performed when the measurements were taken.
+  * **Class:** Character / Factor.
+  * **Values:** 
+    * `WALKING`
+    * `WALKING_UPSTAIRS`
+    * `WALKING_DOWNSTAIRS`
+    * `SITTING`
+    * `STANDING`
+    * `LAYING`
+
+---
+
+### Feature Measurements (Averages)
+The remaining features represent the average of measurements collected from the Samsung Galaxy S smartphone accelerometer and gyroscope. 
+
+* **Prefixes:**
+  * `Time`: Time-domain signals.
+  * `Frequency`: Frequency-domain signals (derived via Fast Fourier Transform - FFT).
+* **Components:**
+  * `Body`: Body acceleration / movement signal.
+  * `Gravity`: Gravitational acceleration signal.
+  * `Accelerometer`: 3axial acceleration signals from the accelerometer.
+  * `Gyroscope`: 3axial angular velocity signals from the gyroscope.
+  * `Jerk`: Jerk signals (derived from linear acceleration and angular velocity).
+  * `Magnitude` (Mag): Magnitude of three-dimensional signals calculated using the Euclidean norm.
+* **Statistical Suffixes:**
+  * `mean()`: Mean value.
+  * `std()`: Standard deviation.
+
+*Note: All feature values in the original dataset are normalized and bounded within the range of $[-1, 1]$. Therefore, the final averaged values in `FinalData.txt` also reflect these normalized units.*
